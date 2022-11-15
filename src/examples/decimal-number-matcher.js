@@ -21,7 +21,7 @@ const ERRORS = {
     message: "The value exceeded maximum number of decimal places."
   }
 };
-Object.freeze(errors);
+Object.freeze(ERRORS);
 
 /**
  * Matcher validates that string value represents a decimal number or null.
@@ -57,7 +57,6 @@ class DecimalNumberMatcher {
 
     if (this.isExceedMaxOfDigits(number)) {
       this.result.addInvalidTypeError(ERRORS.MAX_OF_DIGITS.code, ERRORS.MAX_OF_DIGITS.message);
-      return this.result;
     }
 
     if (this.isExceedMaxOfDecimal(number)) {
