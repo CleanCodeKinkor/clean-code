@@ -3,24 +3,24 @@
 const Decimal = require("decimal.js");
 const ValidationResult = require("./validation-result");
 
-const defaultMaxOfDigits = 11;
-const indexNumOfDigits = 0;
-const indexNumOfDecimal = 1;
+const DEFAULT_MAX_OF_DIGITS = 11;
+const INDEX_NUM_OF_DIGITS = 0;
+const INDEX_NUM_OF_DECIMAL = 1;
 
-const errors = {
-  valideNum : {
+const ERRORS = {
+  VALID_NUM: {
     code: "doubleNumber.e001",
     message: "The value is not a valid decimal number."
   },
-  maxOfDigits : {
+  MAX_OF_DIGITS: {
     code: "doubleNumber.e002",
     message: "The value exceeded maximum number of digits."
   },
-  maxOfDecimal : {
+  MAX_OF_DECIMAL: {
     code: "doubleNumber.e003",
     message: "The value exceeded maximum number of decimal places."
   }
-}
+};
 Object.freeze(errors);
 
 /**
@@ -51,19 +51,20 @@ class DecimalNumberMatcher {
     try {
       number = new Decimal(value);
     } catch (e) {
-      this.result.addInvalidTypeError(errors.valideNum.code, errors.valideNum.message);
+      this.result.addInvalidTypeError(ERRORS.VALID_NUM.code, ERRORS.VALID_NUM.message);
       return this.result;
     }
 
     if (this.isExceedMaxOfDigits(number)) {
-      this.result.addInvalidTypeError(errors.maxOfDigits.code, errors.maxOfDigits.message);
+      this.result.addInvalidTypeError(ERRORS.MAX_OF_DIGITS.code, ERRORS.MAX_OF_DIGITS.message);
+      return this.result;
     }
 
     if (this.isExceedMaxOfDecimal(number)) {
-      this.result.addInvalidTypeError(errors.maxOfDecimal.code, errors.maxOfDecimal.message);
+      this.result.addInvalidTypeError(ERRORS.MAX_OF_DECIMAL.code, ERRORS.MAX_OF_DECIMAL.message);
     }
 
-    return result;
+    return this.result;
   }
 
   isExceedMaxOfDigits(number) {
@@ -71,15 +72,15 @@ class DecimalNumberMatcher {
   }
 
   isExceedMaxOfDecimal(number) {
-    return this.params.length >= (indexNumOfDecimal + 1)
-      && number.decimalPlaces() > this.params[indexNumOfDecimal];
+    return this.params.length >= (INDEX_NUM_OF_DECIMAL + 1)
+      && number.decimalPlaces() > this.params[INDEX_NUM_OF_DECIMAL];
   }
 
   getMaxNumOfDigitals() {
-    if (this.params.length >= (indexNumOfDigits + 1)) {
-      return this.params[indexNumOfDigits];
+    if (this.params.length >= (INDEX_NUM_OF_DIGITS + 1)) {
+      return this.params[INDEX_NUM_OF_DIGITS];
     }
-    return defaultMaxOfDigits;
+    return DEFAULT_MAX_OF_DIGITS;
   }
 }
 
